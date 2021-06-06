@@ -1,6 +1,7 @@
 bettersql -- A better SQL engine for DataFrames, Lists and Dictionaries
 =====================================
 [![Current version on PyPI](http://img.shields.io/pypi/v/bettersql.svg)][pypi]
+[![Current version on PyPI](http://img.shields.io/pypi/v/grip.svg)][pypi]
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/joey@me.com)
 
 Motivation
