@@ -1,0 +1,5 @@
+# bettersql
+## A simple function to run SQL on Pandas DataFrames or Python lists of dicts or dicts of lists that could be converted to a DataFrame.
+The sqldf function automatically passes gets *globals()* from the caller level so there is no need to create the lambda like in Pandasql.
+Also bettersql supports the ability to pass Python functions as UDF's that can be called in SQL.
+

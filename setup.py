@@ -4,6 +4,11 @@ VERSION = '1.1.0'
 DESCRIPTION = 'A package to use SQL with Pandas DataFrames, list and dict.'
 LONG_DESCRIPTION = 'A more feature rich alternative to Pandasql that allows for custom UDF, as well as lit and dict as source tables and return types'
 
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README'), encoding='utf-8') as f:
+    long_description = f.read()
+
 # Setting up
 setup(
        # the name must match the folder name 'verysimplemodule'
@@ -12,7 +17,8 @@ setup(
         author="Joseph Gagliardo",
         author_email="joey@me.com",
         description=DESCRIPTION,
-        long_description=LONG_DESCRIPTION,
+        long_description=long_description,
+        long_description_content_type='text/markdown',
         install_requires=['pandas'], 
         keywords=['python', 'sql', 'pandas', 'udf'],
         packages=find_packages(),
