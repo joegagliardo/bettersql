@@ -1,6 +1,5 @@
 bettersql -- A better SQL engine for DataFrames, Lists and Dictionaries
 =====================================
-
 [![Current version on PyPI](http://img.shields.io/pypi/v/bettersql.svg)][pypi]
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/joey@me.com)
 
@@ -34,6 +33,7 @@ def reverse(x):
     # sample function with one parameter
     if x is not None:
         return x[::-1]
+
 # DataFrame source
 names = pd.DataFrame({'id':[1, 2, 3], 'name':['Alpha', 'Beta', 'Gamma'], 'category':[1, 2, 2]})    
 
@@ -46,6 +46,7 @@ FROM names AS n
 LEFT JOIN categories AS c on n.category= c.id
 '''
 
+# The first reverse is the alias for the function in SQL and the second reverse is a reference to the Python UDF
 r = sqldf(sql, reverse = reverse) 
 print(r)
 ```
