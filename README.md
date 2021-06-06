@@ -1,4 +1,4 @@
-bettersql -- A better SQL engine for DataFrames, Lists and Dictionaries
+A better SQL engine for DataFrames, Lists and Dictionaries
 =====================================
 [![Current version on PyPI](http://img.shields.io/pypi/v/bettersql.svg)](https://pypi.org/project/bettersql/)
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/joey@me.com)

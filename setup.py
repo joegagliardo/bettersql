@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.1.0' 
+VERSION = '1.1.1' 
 DESCRIPTION = 'A package to use SQL with Pandas DataFrames, list and dict.'
 LONG_DESCRIPTION = 'A more feature rich alternative to Pandasql that allows for custom UDF, as well as lit and dict as source tables and return types'
 
@@ -31,4 +31,6 @@ setup(
             "Operating System :: POSIX :: Linux",
             "License :: OSI Approved :: Apache Software License"
         ]
+        , project_urls = {"Home Page" : "https://github.com/joegagliardo/bettersql"}
 )
+
