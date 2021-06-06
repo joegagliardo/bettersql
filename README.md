@@ -25,8 +25,7 @@ Usage
 A simple example:
 
 ```python
-import pandas as pd
-from pandas import read_sql_query, DataFrame
+from pandas import DataFrame
 from bettersql import sqldf
 
 def reverse(x):
@@ -35,7 +34,7 @@ def reverse(x):
         return x[::-1]
 
 # DataFrame source
-names = pd.DataFrame({'id':[1, 2, 3], 'name':['Alpha', 'Beta', 'Gamma'], 'category':[1, 2, 2]})    
+names = DataFrame({'id':[1, 2, 3], 'name':['Alpha', 'Beta', 'Gamma'], 'category':[1, 2, 2]})    
 
 # Dict of lists source
 categories = {'id':[1, 2, 3], 'name':['One', 'Two', 'Three']}
