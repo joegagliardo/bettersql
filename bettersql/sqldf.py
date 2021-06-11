@@ -23,10 +23,8 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
         - 'dict' (default) : dict like {column -> {index -> value}}
         - 'list' : dict like {column -> [values]}
         - 'series' : dict like {column -> Series(values)}
-        - 'split' : dict like
-          {'index' -> [index], 'columns' -> [columns], 'data' -> [values]}
-        - 'records' : list like
-          [{column -> value}, ... , {column -> value}]
+        - 'split' : dict like {'index' -> [index], 'columns' -> [columns], 'data' -> [values]}
+        - 'records' : list like [{column -> value}, ... , {column -> value}]
 
     params : dict
         KV parameters to pass in Python functions to the memory database, 
@@ -63,7 +61,8 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
                 df = DataFrame(v)
                 df.to_sql(k, cn, index = index)
 
-        # search through the environment to see if any tables mentioned in FROM or JOIN clause exist and push them into the memory database
+        # search through the environment to see if any tables mentioned in FROM or JOIN clause 
+        # that are not specified in the params and push them into the memory database
         # the table can be a DataFrame or a list or dict that is convertible to a DataFrame
         for k in get_table_names(sql):
             if k in env and k not in addedtables:
@@ -74,9 +73,8 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
                     df = DataFrame(o)
                     df.to_sql(k, cn, index = index)
 
-
-
-        # you can pass in multiple statements separated by a ; in order to do UPDATE, INSERT, DELETE, but the last query must be a SELECT
+        # you can pass in multiple statements separated by a ; in order to do CREATE TABLE, UPDATE, INSERT, DELETE, 
+        # but the last query must be a SELECT to return a result
         if ';' in sql:
             commands = [x.strip() for x in sql.split(';')]
             for c in commands[:-1]:
