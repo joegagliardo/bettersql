@@ -8,7 +8,13 @@ Furthermore, you can use SQL UPDATE, INSERT, DELETE commands to modify the DataF
 You can also CREATE TABLE and populate it in SQL and combine it with the source from a DataFrame or collection
 '''
 
-def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
+def get_table_names(sql):
+    import re
+    x = re.split('from |FROM |From |join |JOIN |Join ', sql)
+    tables = [t[:f'{t.strip()} '.index(' ')] for t in x][1:]
+    return tables
+
+def sqldf(sql:str, *, index:bool = False, output:str = 'dataframe', **params):
     '''
     sql : str
          The SQL command or commands you want to run. 
@@ -17,7 +23,7 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
     index : bool (Default: False)
          When a DataFrame is pushed into the memory table, should the index col be included
 
-    output : str {'dict', 'list', 'series', 'split', 'records', 'index'}
+    output : str {'dataframe', 'dict', 'list', 'series', 'split', 'records', 'index'}
         Determines the type of the values of the dictionary.
     
         - 'dict' (default) : dict like {column -> {index -> value}}
@@ -31,6 +37,10 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
         or to specify specific tables with aliases rather than the default of searching for FROM and JOIN
         key is a string which is the function name SQL will use, 
         value is a pointer to the function or table source
+
+        There is no real error checking so make sure any list or dicts you pass in to automatically convert to a DataFrame
+        are in the correct format and that you don't send any bad SQL. This module relies on the errors thrown by the 
+        functions it calls.
     '''
 
     from pandas import read_sql_query, DataFrame
@@ -38,25 +48,23 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
     import types 
     from inspect import signature, stack
 
-    # get globals from the caller level
+    # get globals from the caller level in order to find objects that refer to virtual tables in the SQL statement
     env = stack()[1][0].f_globals
 
-    def get_table_names(sql):
-        import re
-        x = re.split('from |FROM |From |join |JOIN |Join ', sql.lower())
-        tables = [t[:t.index(' ')] for t in x][1:]
-        return tables
 
     with sqlite3.connect(':memory:') as cn:
         addedtables = set()
         # go through the list of KV parameters to push any UDF's or named tables into the memory database
         for k, v in params.items():
             if type(v) in (types.FunctionType, types.LambdaType):
+                # If it's a function add it
                 cn.create_function(k, len(signature(v).parameters), v)
             elif isinstance(v, DataFrame):
-                v.to_sql(k, cn, index = index)
+                # if it's a DataFrame add it as is
                 addedtables.add(k)
+                v.to_sql(k, cn, index = index)
             elif isinstance(v, dict) or isinstance(v, list):
+                # if it's a list of dict automatically convert it to a DataFrame
                 addedtables.add(k)
                 df = DataFrame(v)
                 df.to_sql(k, cn, index = index)
@@ -84,7 +92,7 @@ def sqldf(sql:str, *, index:bool = False, output:str = None, **params):
             r = read_sql_query(sql, cn)
 
         # if the output flag is passed it calls the DataFrame to_dict with that option
-        if output:
+        if output and output.lower() != 'dataframe':
             return r.to_dict(output)
         
         return r
