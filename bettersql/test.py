@@ -1,10 +1,13 @@
+#! python3.9
+import sys
+print(sys.version)
 import pandas as pd
 
 # if running locally during builds before uploading to pypi
 from sqldf import sqldf
 
 # if running to test the downloaded package from pypi
-#from bettersql import sqldf
+# from bettersql import sqldf
 
 def reverse(x):
     # sample function with one parameter

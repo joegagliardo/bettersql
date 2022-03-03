@@ -31,6 +31,7 @@ def sqldf(sql:str, *, index:bool = False, output:str = 'dataframe', **params):
         - 'series' : dict like {column -> Series(values)}
         - 'split' : dict like {'index' -> [index], 'columns' -> [columns], 'data' -> [values]}
         - 'records' : list like [{column -> value}, ... , {column -> value}]
+        - 'csv' : simple CSV format
 
     params : dict
         KV parameters to pass in Python functions to the memory database, 
@@ -92,7 +93,11 @@ def sqldf(sql:str, *, index:bool = False, output:str = 'dataframe', **params):
             r = read_sql_query(sql, cn)
 
         # if the output flag is passed it calls the DataFrame to_dict with that option
-        if output and output.lower() != 'dataframe':
-            return r.to_dict(output)
+        if output:
+            if output.lower() == 'csv':
+                x = r.to_dict('record')
+                return ( ','.join(map(str, e.values())) for e in x)
+            elif output.lower() != 'dataframe':
+                return r.to_dict(output)
         
         return r
