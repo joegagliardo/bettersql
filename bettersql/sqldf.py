@@ -49,9 +49,11 @@ def sqldf(sql:str, *, index:bool = False, output:str = 'dataframe', **params):
     import types 
     from inspect import signature, stack
 
-    # get globals from the caller level in order to find objects that refer to virtual tables in the SQL statement
+    # get globals and locals from the caller level in order to find objects that refer to virtual tables in the SQL statement
+    # env = stack()[1][0]
     env = stack()[1][0].f_globals
-
+    env2 = stack()[1][0].f_locals
+    env.update(env2)
 
     with sqlite3.connect(':memory:') as cn:
         addedtables = set()

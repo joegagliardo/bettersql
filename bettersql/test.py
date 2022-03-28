@@ -106,4 +106,26 @@ print('-' * 30)
 r = sqldf(sql, output = 'records')
 print('records output')
 print(r)
+  
+def inside_function():
+    # Here the data sources are inside a function so they would be found in the locals() not the
+    # globals() but the two environments are now merged in the sqldf function
+    
+    # DataFrame source
+    names1 = pd.DataFrame({'id':[1, 2, 3], 'name':['Alpha', 'Beta', 'Gamma'], 'category':[1, 2, 2]})    
 
+    # Dict source of lists
+    categories1 = {'id':[1, 2, 3], 'name':['One', 'Two', 'Three']}
+
+    sql = '''
+    SELECT n.id, n.name, n.category, c.name as categoryname
+        , reverse(n.name) as reverse, rev(c.name) as rev, twofun(n.name, n.id) as repeat 
+    FROM names1 AS n
+    LEFT JOIN categories1 AS c on n.category= c.id
+    '''
+
+    r = sqldf(sql, reverse = reverse, twofun = twofun, rev = lambda x : None if x is None else x[::-1]) 
+    print('-' * 30)
+    print(r)
+
+inside_function()
